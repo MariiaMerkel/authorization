@@ -16,20 +16,14 @@ public class AuthorizationController {
     }
 
     @GetMapping()
-    public String checkLogin(@RequestParam(value = "login", required = false) String login, @RequestParam(value = "password", required = false) String password, @RequestParam(value = "confirmPassword", required = false) String confirmPassword) {
+    public String checkLogin(@RequestParam(value = "login") String login, @RequestParam(value = "password") String password, @RequestParam(value = "confirmPassword") String confirmPassword) {
         try {
-            if (login != null) {
-                return authorization.checkLogin(login);
-            }
-            if (password != null && confirmPassword == null) {
-                return authorization.checkPassword(password);
-            }
-            if (password != null && confirmPassword != null) {
-                return authorization.checkConfirmPassword(password, confirmPassword);
-            }
+                authorization.checkLogin(login);
+                authorization.checkPassword(password);
+                authorization.checkConfirmPassword(password, confirmPassword);
         } catch (WrongLoginException | WrongPasswordException e) {
             return e.getMessage();
         }
-        return "Что-то пошло не так";
+        return "OK";
     }
 }

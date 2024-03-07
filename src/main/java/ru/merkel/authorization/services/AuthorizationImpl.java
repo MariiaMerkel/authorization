@@ -8,37 +8,28 @@ import ru.merkel.authorization.excaptions.WrongPasswordException;
 public class AuthorizationImpl implements Authorization {
 
     @Override
-    public String checkLogin(String login) {
-        if (login.length() <= 20) {
-            if (login.matches("[a-zA-Z_]+")) {
-                return "OK";
-            } else {
-                throw new WrongLoginException("Логин должен содержать только латинские буквы и символ подчёркивания");
-            }
-        } else {
+    public void checkLogin(String login) {
+        if (login.length() > 20) {
             throw new WrongLoginException("Логин должен содержать не больше 20 символов");
         }
-    }
-
-    @Override
-    public String checkPassword(String password) {
-        if (password.length() <= 20) {
-            if (password.matches("[\\w]+")) {
-                return "OK";
-            } else {
-                throw new WrongPasswordException("Пароль должен содержать только цифры, латинские буквы и символ подчёркивания");
-            }
-        } else {
-            throw new WrongPasswordException("Пароль должен содержать не больше 20 символов");
+        if (!login.matches("[\\w]+")) {
+            throw new WrongLoginException("Логин должен содержать только латинские буквы и символ подчёркивания");
         }
     }
 
     @Override
-    public String checkConfirmPassword(String password, String confirmPassword) {
-        checkPassword(password);
-        if (confirmPassword.equals(password)) {
-            return "OK";
-        } else {
+    public void checkPassword(String password) {
+        if (password.length() > 20) {
+            throw new WrongPasswordException("Пароль должен содержать не больше 20 символов");
+        }
+        if (!password.matches("[\\w]+")) {
+            throw new WrongPasswordException("Пароль должен содержать только цифры, латинские буквы и символ подчёркивания");
+        }
+    }
+
+    @Override
+    public void checkConfirmPassword(String password, String confirmPassword) {
+        if (!confirmPassword.equals(password)) {
             throw new WrongPasswordException("Пароли не совпадают");
         }
     }
